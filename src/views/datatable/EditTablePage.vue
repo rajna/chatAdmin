@@ -109,132 +109,7 @@ const formTitle = computed(() => {
 </script>
 <template>
   <v-container>
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" lg="4" md="6">
-            <v-text-field
-              density="compact"
-              v-model="search"
-              label="Search Contacts"
-              hide-details
-              variant="outlined"
-              color="primary"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" lg="8" md="6" class="text-right">
-            <v-dialog v-model="dialog" max-width="700">
-              <template v-slot:activator="{ props }">
-                <v-btn color="primary" v-bind="props" flat class="ml-auto">
-                  <v-icon class="mr-2">mdi-account-multiple-plus</v-icon>Add
-                  Contact
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="pa-4 bg-secondary">
-                  <span class="title text-white">{{ formTitle }}</span>
-                </v-card-title>
-
-                <v-card-text>
-                  <v-form
-                    class="mt-5"
-                    ref="form"
-                    v-model="refForm"
-                    lazy-validation
-                  >
-                    <v-row>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          v-model="editedItem.id"
-                          label="Id"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          :rules="nameRules"
-                          :counter="10"
-                          required
-                          v-model="editedItem.username"
-                          label="User info"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          v-model="editedItem.usermail"
-                          label="User email"
-                          type="email"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          v-model="editedItem.phone"
-                          label="Phone"
-                          type="phone"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          v-model="editedItem.jdate"
-                          label="Joining Date"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          v-model="editedItem.role"
-                          label="Role"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="12">
-                        <v-select
-                          variant="outlined"
-                          color="primary"
-                          density="compact"
-                          :items="rolesbg"
-                          v-model="editedItem.rolestatus"
-                          label="Role Background"
-                        ></v-select>
-                      </v-col>
-                    </v-row>
-                  </v-form>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions class="pa-4">
-                  <v-spacer></v-spacer>
-                  <v-btn color="error" @click="close">Cancel</v-btn>
-                  <v-btn
-                    color="secondary"
-                    :disabled="
-                      editedItem.username == '' || editedItem.usermail == ''
-                    "
-                    variant="flat"
-                    @click="save"
-                    >Save</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+  
 
     <v-card class="mt-2">
       <v-table class="mt-5">
@@ -244,8 +119,6 @@ const formTitle = computed(() => {
             <th class="text-subtitle-1 font-weight-semibold">UserInfo</th>
             <th class="text-subtitle-1 font-weight-semibold">Phone</th>
             <th class="text-subtitle-1 font-weight-semibold">Joining Date</th>
-            <th class="text-subtitle-1 font-weight-semibold">Role</th>
-            <th class="text-subtitle-1 font-weight-semibold">Actions</th>
           </tr>
         </thead>
         <tbody class="text-body-1">
@@ -271,53 +144,8 @@ const formTitle = computed(() => {
             </td>
             <td>{{ item.phone }}</td>
             <td>{{ item.jdate }}</td>
-            <td>
-              <v-chip
-                class="font-weight-bold"
-                :color="item.rolestatus"
-                size="small"
-                label
-                >{{ item.role }}</v-chip
-              >
-            </td>
-            <td>
-              <div class="d-flex align-center">
-                <v-tooltip text="Edit">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      color="blue"
-                      icon
-                      variant="text"
-                      @click="editItem(item)"
-                      v-bind="props"
-                    >
-                      <v-icon>mdi-pencil-outline</v-icon>
-                      <!-- <img
-                        width="26"
-                        src="https://img.icons8.com/fluency/48/null/edit.png"
-                    /> -->
-                    </v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="Delete">
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      icon
-                      variant="text"
-                      @click="deleteItem(item)"
-                      v-bind="props"
-                      color="error"
-                    >
-                      <v-icon>mdi-delete-outline</v-icon>
-                      <!-- <img
-                        width="26"
-                        src="https://img.icons8.com/fluency/48/null/filled-trash.png"
-                    /> -->
-                    </v-btn>
-                  </template>
-                </v-tooltip>
-              </div>
-            </td>
+            
+       
           </tr>
         </tbody>
       </v-table>

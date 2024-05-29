@@ -9,6 +9,8 @@ import { useSnackbarStore } from "@/stores/snackbarStore";
 import AnimationChat from "@/components/animations/AnimationChat1.vue";
 import AnimationAi from "@/components/animations/AnimationBot1.vue";
 
+import EditTablePage from "../datatable/EditTablePage.vue";
+
 import { read, countAndCompleteCodeBlocks } from "@/utils/aiUtils";
 import { scrollToBottom } from "@/utils/common";
 import { MdPreview } from "md-editor-v3";
@@ -197,7 +199,9 @@ const inputRow = ref(1);
               </v-avatar>
               <v-card>
                 <div>
-                  <md-preview :modelValue="message.content" class="font-1" />
+                <md-preview :modelValue="message.content" class="font-1" />
+                  <EditTablePage/>
+                  
                 </div>
               </v-card>
             </div>

@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useChatGPTStore = defineStore({
   id: "chatGPT",
   state: () => ({
-    propmpt: "",
+    propmpt: "CREATE TABLE IF NOT EXISTS 'users' ('id' INT NOT NULL AUTO_INCREMENT,'username' VARCHAR(50) NOT NULL,'password' VARCHAR(50) NOT NULL,'email' VARCHAR(100),'create_time' DATETIME DEFAULT CURRENT_TIMESTAMP,'update_time' DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,PRIMARY KEY ('id'),UNIQUE KEY 'username_UNIQUE' ('username'),UNIQUE KEY 'email_UNIQUE' ('email')) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;这是我的数据库中户表的创建方式",
     configDialog: false,
     apiKey: "",
     proxyUrl: "https://api.openai-proxy.com",

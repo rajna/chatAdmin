@@ -82,7 +82,7 @@ Nuxt3 Simplified Version [lux-nuxt3-template](https://github.com/yangjiakai/lux-
 
 - Email <a href="mailto:yjkbako@gmail.com">yjkbako@gmail.com</a>
 - Twitter https://twitter.com/baibaixiang
-- Wechat <img  src='/src/assets/wechat-qrcode.png'  alt='DashBoard' width='300' />
+##- Wechat <img  src='/src/assets/wechat-qrcode.png'  alt='DashBoard' width='300' />
 
 ## 💌Preview
 
