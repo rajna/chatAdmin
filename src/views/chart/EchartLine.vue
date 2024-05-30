@@ -8,7 +8,11 @@
 import { Ref } from "vue";
 import type { EChartsOption } from "echarts";
 import { useChart, RenderType, ThemeType } from "@/plugins/echarts";
-
+const props = defineProps({
+  datalist: {
+    type: Array
+  },
+});
 const data = [
   ["2000-06-05", 116],
   ["2000-06-06", 129],
@@ -61,11 +65,11 @@ const data = [
   ["2000-07-23", 55],
   ["2000-07-24", 60],
 ];
-const dateList = data.map(function (item) {
-  return item[0];
+const dateList = props.datalist.map(function (item) {
+  return item.date;
 });
-const valueList = data.map(function (item) {
-  return item[1];
+const valueList = props.datalist.map(function (item) {
+  return item.num;
 });
 
 const option = computed<EChartsOption>(() => ({

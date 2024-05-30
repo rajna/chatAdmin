@@ -11,6 +11,8 @@ import AnimationAi from "@/components/animations/AnimationBot1.vue";
 
 import EditTablePage from "../datatable/EditTablePage.vue";
 
+import EchartLine from "../chart/EchartLine.vue";
+
 import { read, countAndCompleteCodeBlocks } from "@/utils/aiUtils";
 import { scrollToBottom } from "@/utils/common";
 import { MdPreview } from "md-editor-v3";
@@ -19,6 +21,7 @@ import "md-editor-v3/lib/preview.css";
 import ApiKeyDialog from "@/components/ApiKeyDialog.vue";
 const snackbarStore = useSnackbarStore();
 const chatGPTStore = useChatGPTStore();
+
 
 interface Message {
   content: string;
@@ -119,7 +122,9 @@ const createCompletion = async () => {
 
     // Add the bot message
     messages.value.push({
-      content: completion.data.data.result,
+      content: completion.data.result,
+      dataType: completion.data.dataType,
+      data: completion.data.data,
       role: "assistant",
     });
 
@@ -200,8 +205,8 @@ const inputRow = ref(1);
               <v-card>
                 <div>
                 <md-preview :modelValue="message.content" class="font-1" />
-                  <EditTablePage/>
-                  
+                  <EditTablePage :datalist="message.data"/>
+                  <EchartLine :datalist="message.data"/>
                 </div>
               </v-card>
             </div>

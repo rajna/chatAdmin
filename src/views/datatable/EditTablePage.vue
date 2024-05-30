@@ -2,6 +2,12 @@
 import { faker } from "@faker-js/faker";
 import moment from "moment";
 
+const props = defineProps({
+  datalist: {
+    type: Array
+  },
+});
+
 const chooseColor = () => {
   let colors = ["red", "indigo", "blue", "cyan", "teal"];
   let randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -52,13 +58,9 @@ const editedItem = ref({
 });
 const defaultItem = ref({
   id: "",
-  avatar: faker.internet.avatar(),
-  username: "",
-  usermail: "",
-  phone: "",
-  jdate: "",
-  role: "",
-  rolestatus: "",
+  create_time: "",
+  question: "",
+  answer: "",
 });
 
 const nameRules = [
@@ -114,38 +116,19 @@ const formTitle = computed(() => {
     <v-card class="mt-2">
       <v-table class="mt-5">
         <thead>
-          <tr>
+          <tr >
             <th class="text-subtitle-1 font-weight-semibold">Id</th>
-            <th class="text-subtitle-1 font-weight-semibold">UserInfo</th>
-            <th class="text-subtitle-1 font-weight-semibold">Phone</th>
-            <th class="text-subtitle-1 font-weight-semibold">Joining Date</th>
+            <th class="text-subtitle-1 font-weight-semibold">create_time</th>
+            <th class="text-subtitle-1 font-weight-semibold">question</th>
+            <th class="text-subtitle-1 font-weight-semibold">answer</th>
           </tr>
         </thead>
         <tbody class="text-body-1">
-          <tr v-for="item in filteredList" :key="item.id">
+          <tr v-for="item in props.datalist" :key="item.id">
             <td class="font-weight-bold">{{ item.id }}</td>
-            <td>
-              <div class="d-flex align-center py-1">
-                <div>
-                  <v-img
-                    :src="item.avatar"
-                    width="40"
-                    class="rounded-circle img-fluid"
-                  ></v-img>
-                </div>
-
-                <div class="ml-5">
-                  <p class="font-weight-bold">{{ item.username }}</p>
-                  <span class="d-block mt-1 text-caption textSecondary">{{
-                    item.usermail
-                  }}</span>
-                </div>
-              </div>
-            </td>
-            <td>{{ item.phone }}</td>
-            <td>{{ item.jdate }}</td>
-            
-       
+            <td>{{ item.create_time }}</td>
+            <td>{{ item.question }}</td>
+            <td>{{ item.answer }}</td>
           </tr>
         </tbody>
       </v-table>
