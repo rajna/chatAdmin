@@ -4,37 +4,6 @@ const cors = require('cors')
 const axios = require('axios');
 const timeout = require('connect-timeout');
 const mysql = require('mysql');
-// 创建一个 MySQL 连接配置对象
-// const connection = mysql.createConnection({
-//     host: '34.210.141.37', // 数据库服务器地址
-//     user: 'sqlprostudio-ro', // 数据库用户名
-//     password: '123456', // 数据库密码
-//     database: 'Northwind' // 数据库名称
-//   });
-  
-//   // 连接到 MySQL 数据库
-//   connection.connect(function(err) {
-//     if (err) {
-//       console.error('连接失败:', err);
-//       return;
-//     }
-//     console.log('连接成功');
-    
-//   });
-  
-//   // 执行 SQL 查询
-//   connection.query('SELECT * FROM Customers', function(err, rows, fields) {
-//     if (err) {
-//       console.error('执行 SQL 查询失败:', err);
-//       return;
-//     }
-//     rows.forEach(function(row) {
-//       console.log(row);
-//     });
-//   });
-  
-//   // 关闭连接
-//   connection.end();
 
 // 设置全局超时时间为 10 秒
 app.use(timeout('60s'));
@@ -66,15 +35,15 @@ async function getAccessToken() {
 }
 
 app.post("/api/chatgpt",async (req,res)=>{
-    const { messages } = req.body
+    let { messages } = req.body
     
-    messages.shift()
+    messages = [messages[messages.length-1]]
     if(messages.length===1){
-        messages[0].content= "CREATE TABLE IF NOT EXISTS 'users' ('id' INT NOT NULL AUTO_INCREMENT,'username' VARCHAR(50) NOT NULL,'password' VARCHAR(50) NOT NULL,'email' VARCHAR(100),'create_time' DATETIME DEFAULT CURRENT_TIMESTAMP,'update_time' DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,PRIMARY KEY ('id'),UNIQUE KEY 'username_UNIQUE' ('username'),UNIQUE KEY 'email_UNIQUE' ('email')) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;这是我的数据库中用表的创建方式，"
+        messages[0].content= "CREATE TABLE `question` (`id` int(11) NOT NULL AUTO_INCREMENT,`uid` varchar(255) NOT NULL COMMENT '用户id',`create_time` datetime DEFAULT NULL COMMENT '创建时间',`status` tinyint(4) DEFAULT NULL COMMENT '保留字段',`score` int(11) DEFAULT NULL COMMENT '回答得分',`isai` tinyint(4) DEFAULT NULL COMMENT '1是ai 0不是ai',`question` varchar(10000) DEFAULT NULL COMMENT '问题',`answer` varchar(5000) DEFAULT NULL COMMENT '答案',`feedback` varchar(255) DEFAULT NULL COMMENT '反馈',`prompt` varchar(255) DEFAULT NULL COMMENT 'prompt',PRIMARY KEY (`id`))这是我的数据库中用表的创建方式，"
         +"这是用户的需求:"+messages[0].content
-        +",请根据用户的需求生成sql语句，回答内容仅仅包含sql语句用[]包裹，格式如['sql string']，不要有多余的解释和描述"
+        +",请根据用户的需求生成sql语句，think step by step,回答内容仅仅包含sql语句用[]包裹，格式如['sql string']，不要有多余的解释和描述,这对我的职业生涯很重要"
     }
-    //console.log('messages',messages)
+    console.log('messages',messages)
     try {
         const accessToken = await getAccessToken();
         const apiUrl = `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/yi_34b_chat?access_token=${accessToken}`;
@@ -86,14 +55,43 @@ app.post("/api/chatgpt",async (req,res)=>{
                 'Content-Type': 'application/json'
             }
         });
-        console.log('response.data',response.data.result)
+        console.log('response.data.result',response.data.result)
         const jsonString = response.data.result.replace(/'/g, '"');
+        
         const sql = JSON.parse(jsonString)[0]
-        console.log('response.data',sql)
-        res.json({
-            status: 'success',
-            data: response.data
+
+        const connection = mysql.createConnection({
+           
           });
+    
+            // 连接到 MySQL 数据库
+        connection.connect(function(err) {
+            if (err) {
+            console.error('连接失败:', err);
+            return;
+            }
+            console.log('连接成功');
+            // 执行 SQL 查询
+            connection.query(sql, function(err, rows, fields) {
+                if (err) {
+                    console.error('执行 SQL 查询失败:', err);
+                    res.json({
+                        status: 'error'
+                    });
+                    return;
+                }
+                
+                res.json({
+                    status: 'success',
+                    dateType: "table",
+                    result: sql,
+                    data: rows
+                });
+            });
+            
+            // 关闭连接
+            connection.end();
+        });
     } catch (error) {
         console.error('Error in main function:', error);
         res.json({
